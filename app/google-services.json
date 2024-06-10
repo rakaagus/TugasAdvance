@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "649036315199",
+    "project_id": "tugasadvance",
+    "storage_bucket": "tugasadvance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649036315199:android:3f5b5915ab51b94568968a",
+        "android_client_info": {
+          "package_name": "com.infinitelearning.tugasadvance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "649036315199-buc17pfub55jdvjcq1adlan9bpnpsthj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8ri6UnrHPrkipoCqqMbuRlaV6RRo0h9w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "649036315199-buc17pfub55jdvjcq1adlan9bpnpsthj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
