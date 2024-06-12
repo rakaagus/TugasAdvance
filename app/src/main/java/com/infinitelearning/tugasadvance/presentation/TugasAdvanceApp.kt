@@ -36,6 +36,7 @@ import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.navigation.NavigationItem
 import com.infinitelearning.tugasadvance.presentation.navigation.Screen
 import com.infinitelearning.tugasadvance.presentation.screen.auth.login.LoginScreen
+import com.infinitelearning.tugasadvance.presentation.screen.auth.register.RegisterScreen
 import com.infinitelearning.tugasadvance.presentation.screen.splash.SplashScreen
 import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 
@@ -67,8 +68,11 @@ fun TugasAdvanceApp(
                             }) {
                                 Icon(imageVector = Icons.Filled.Map, contentDescription = "Map")
                             }
-                            IconButton(onClick = {  }) {
-                                Icon(imageVector = Icons.Filled.Logout, contentDescription = "Logout")
+                            IconButton(onClick = { }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Logout,
+                                    contentDescription = "Logout"
+                                )
                             }
                         },
                     )
@@ -92,8 +96,8 @@ fun TugasAdvanceApp(
                         navigationIcon = {
                             IconButton(
                                 onClick = {
-                                    navController.navigate(Screen.HomeScreen.route){
-                                        popUpTo(Screen.MapScreen.route){
+                                    navController.navigate(Screen.HomeScreen.route) {
+                                        popUpTo(Screen.MapScreen.route) {
                                             inclusive = true
                                         }
                                     }
@@ -130,10 +134,23 @@ fun TugasAdvanceApp(
             composable(Screen.AlarmScreen.route) {}
             composable(Screen.FavScreen.route) {}
             composable(Screen.LoginScreen.route) {
-                LoginScreen()
+                LoginScreen(
+                    moveToHome = {
+                        navController.navigate(Screen.HomeScreen.route){
+                            popUpTo(Screen.LoginScreen.route){
+                                inclusive = true
+                            }
+                        }
+                    },
+                    moveToRegister = {
+                        navController.navigate(Screen.RegisterScreen.route)
+                    }
+                )
             }
-            composable(Screen.RegisterScreen.route){
-
+            composable(Screen.RegisterScreen.route) {
+                RegisterScreen(moveToLogin = {
+                    navController.navigate(Screen.LoginScreen.route)
+                })
             }
         }
 

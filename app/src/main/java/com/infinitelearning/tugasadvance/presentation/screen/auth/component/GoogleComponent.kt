@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +27,7 @@ fun GoogleButton(
 
     OutlinedButton(
         onClick = clicked,
-        shape = MaterialTheme.shapes.large,
+        shape = RoundedCornerShape(12.dp),
         modifier = modifier.fillMaxWidth()
     ) {
         if (isConnectLoading) {
@@ -45,6 +46,7 @@ fun GoogleButton(
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 "Google Content",
+                color = Color.White,
                 style = MaterialTheme.typography.bodyLarge
             )
         }

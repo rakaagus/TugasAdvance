@@ -1,5 +1,8 @@
 package com.infinitelearning.tugasadvance.presentation.screen.auth.login
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,27 +13,67 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.EmailTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.GoogleButton
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.PasswordTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.TextChoice
+import com.infinitelearning.tugasadvance.utils.ImoKeyboard
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(
+    moveToHome: () -> Unit,
+    moveToRegister: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    LoginContent(
+        email = email,
+        password = password,
+        onEmailChange = { email = it },
+        onPasswordChange = { password = it },
+        onLoginClick = { },
+        onGoogleClick = { },
+        moveToRegister = moveToRegister
+    )
+}
+
+@Composable
+fun LoginContent(
+    email: String,
+    password: String,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onGoogleClick: () -> Unit,
+    moveToRegister: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -42,7 +85,10 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
         ) {
-            Spacer(modifier = Modifier.height(100.dp))
+
+            Spacer(modifier = Modifier.height(60.dp))
+
+            Image(painter = painterResource(id = R.drawable.logo), contentDescription = null)
 
             Text(
                 text = "Sign In",
@@ -57,61 +103,46 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                     .padding(top = 4.dp)
             )
 
-            Spacer(modifier = Modifier.height(64.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
             EmailTextField(
-                value = "",
-                onValueChange = {},
+                value = email,
+                onValueChange = onEmailChange,
                 imageVector = Icons.Outlined.Email,
                 contentDescription = "Email",
                 label = "Email",
+                keyboardIme = ImoKeyboard.NEXT
             )
 
             PasswordTextField(
-                text = "",
-                onValueChange = {},
-                label = "Password"
+                text = password,
+                onValueChange = onPasswordChange,
+                label = "Password",
+                keyboardIme = ImoKeyboard.END
             )
 
-            TextButton(
-                onClick = {},
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(bottom = 8.dp)
-            ) {
-                Text(
-                    text = "Forgot password",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-
             Button(
-                onClick = {  },
-                shape = MaterialTheme.shapes.large,
+                onClick = onLoginClick,
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.White, containerColor = Color(0xFF1C1B1F)
+                ),
+                border = BorderStroke(1.dp, Color.White),
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
+                    .padding(top = 50.dp, bottom = 20.dp)
                     .height(48.dp)
             ) {
-                if (false) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        strokeWidth = 3.dp,
-                        modifier = Modifier
-                            .size(32.dp)
-                    )
-                } else {
-                    Text(
-                        text = "Login",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
+                Text(
+                    text = "Login",
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
 
             TextChoice()
 
             GoogleButton(
-                clicked = {},
+                clicked = onGoogleClick,
                 isConnectLoading = false,
                 modifier = Modifier
                     .padding(vertical = 16.dp)
@@ -123,9 +154,10 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "Apakah Kamu belum punya akun?")
-                TextButton(onClick = {}) {
+                TextButton(onClick = moveToRegister) {
                     Text(
                         text = "Daftar",
+                        color = Color.White,
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
