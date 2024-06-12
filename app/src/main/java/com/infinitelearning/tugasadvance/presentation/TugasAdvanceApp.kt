@@ -122,7 +122,8 @@ fun TugasAdvanceApp(
             modifier = modifier.padding(innerPadding)
         ) {
             composable(Screen.SplashScreen.route) {
-                SplashScreen(navController = navController)}
+                SplashScreen(navController = navController)
+            }
             composable(Screen.HomeScreen.route) {}
             composable(Screen.MapScreen.route) {}
             composable(Screen.AlarmScreen.route) {}

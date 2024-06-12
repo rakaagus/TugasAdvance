@@ -12,6 +12,10 @@ val PoetOne = FontFamily(
     Font(R.font.poetsenone_regular)
 )
 
+val Pasifico = FontFamily(
+    Font(R.font.pacifico_regular)
+)
+
 val Roboto = FontFamily(
     Font(R.font.roboto_regular),
     Font(R.font.roboto_bold, FontWeight.Bold)
