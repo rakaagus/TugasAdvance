@@ -35,6 +35,8 @@ import androidx.navigation.compose.rememberNavController
 import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.navigation.NavigationItem
 import com.infinitelearning.tugasadvance.presentation.navigation.Screen
+import com.infinitelearning.tugasadvance.presentation.screen.fav.FavScreen
+import com.infinitelearning.tugasadvance.presentation.screen.home.HomeScreen
 import com.infinitelearning.tugasadvance.presentation.screen.splash.SplashScreen
 import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 
@@ -118,16 +120,20 @@ fun TugasAdvanceApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.SplashScreen.route,
+            startDestination = Screen.HomeScreen.route,
             modifier = modifier.padding(innerPadding)
         ) {
             composable(Screen.SplashScreen.route) {
                 SplashScreen(navController = navController)
             }
-            composable(Screen.HomeScreen.route) {}
+            composable(Screen.HomeScreen.route) {
+                HomeScreen()
+            }
             composable(Screen.MapScreen.route) {}
             composable(Screen.AlarmScreen.route) {}
-            composable(Screen.FavScreen.route) {}
+            composable(Screen.FavScreen.route) {
+                FavScreen()
+            }
             composable(Screen.LoginScreen.route) {}
         }
 
