@@ -7,6 +7,7 @@ import com.infinitelearning.tugasadvance.data.repository.FireBaseAuthImpl
 import com.infinitelearning.tugasadvance.domain.repository.FireBaseAuth
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -21,6 +22,8 @@ abstract class FirebaseModule {
     abstract fun provideFirebaseAuth(fireBaseAuthImpl: FireBaseAuthImpl) : FireBaseAuth
 
     companion object{
+        @Provides
+        @Singleton
         fun provideSingInClient(@ApplicationContext context: Context): SignInClient{
             return Identity.getSignInClient(context)
         }
