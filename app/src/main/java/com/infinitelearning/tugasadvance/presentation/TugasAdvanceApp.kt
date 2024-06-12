@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.navigation.NavigationItem
 import com.infinitelearning.tugasadvance.presentation.navigation.Screen
+import com.infinitelearning.tugasadvance.presentation.screen.auth.login.LoginScreen
 import com.infinitelearning.tugasadvance.presentation.screen.splash.SplashScreen
 import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 
@@ -128,7 +129,12 @@ fun TugasAdvanceApp(
             composable(Screen.MapScreen.route) {}
             composable(Screen.AlarmScreen.route) {}
             composable(Screen.FavScreen.route) {}
-            composable(Screen.LoginScreen.route) {}
+            composable(Screen.LoginScreen.route) {
+                LoginScreen()
+            }
+            composable(Screen.RegisterScreen.route){
+
+            }
         }
 
     }
