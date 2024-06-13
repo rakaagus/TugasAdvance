@@ -85,11 +85,7 @@ fun TugasAdvanceApp(
                     )
                 }
 
-                Screen.AlarmScreen.route -> {
-                    CenterTopAppBar(
-                        title = R.string.title_alarm
-                    )
-                }
+                Screen.AlarmScreen.route -> {}
 
                 Screen.MapScreen.route -> {
                     CenterTopAppBar(
