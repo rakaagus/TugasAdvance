@@ -144,7 +144,8 @@ fun TugasAdvanceApp(
                     },
                     moveToRegister = {
                         navController.navigate(Screen.RegisterScreen.route)
-                    }
+                    },
+                    navController = navController
                 )
             }
             composable(Screen.RegisterScreen.route) {
