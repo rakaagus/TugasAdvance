@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.EmailTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.GoogleButton
@@ -57,7 +58,7 @@ fun LoginScreen(
         password = password,
         onEmailChange = { email = it },
         onPasswordChange = { password = it },
-        onLoginClick = { },
+        onLoginClick = { moveToHome() },
         onGoogleClick = { },
         moveToRegister = moveToRegister
     )
