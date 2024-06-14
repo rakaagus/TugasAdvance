@@ -149,7 +149,7 @@ fun TugasAdvanceApp(
                 )
             }
             composable(Screen.RegisterScreen.route) {
-                RegisterScreen(moveToLogin = {
+                RegisterScreen(navController = navController, moveToLogin = {
                     navController.navigate(Screen.LoginScreen.route)
                 })
             }
