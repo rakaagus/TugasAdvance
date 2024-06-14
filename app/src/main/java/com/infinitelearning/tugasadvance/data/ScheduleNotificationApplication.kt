@@ -1,4 +1,4 @@
-package com.infinitelearning.tugasadvance
+package com.infinitelearning.tugasadvance.data
 
 import android.app.Application
 import android.app.NotificationChannel
@@ -7,20 +7,18 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.infinitelearning.tugasadvance.utils.NotificationKeys.RMNDR_NOTI_CHNNL_ID
 import com.infinitelearning.tugasadvance.utils.NotificationKeys.RMNDR_NOTI_CHNNL_NAME
-import dagger.hilt.android.HiltAndroidApp
 
-@HiltAndroidApp
-class TugasAdvanceApp: Application(){
+class ScheduleNotificationApplication : Application() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
-        val notification = NotificationChannel(
+        val notificationChannel = NotificationChannel(
             RMNDR_NOTI_CHNNL_ID,
             RMNDR_NOTI_CHNNL_NAME,
             NotificationManager.IMPORTANCE_HIGH
         )
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(notification)
+        notificationManager.createNotificationChannel(notificationChannel)
     }
 }

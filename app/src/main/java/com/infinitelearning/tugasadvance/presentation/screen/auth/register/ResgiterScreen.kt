@@ -1,4 +1,4 @@
-package com.infinitelearning.tugasadvance.presentation.screen.auth.login
+package com.infinitelearning.tugasadvance.presentation.screen.auth.register
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -39,39 +40,44 @@ import androidx.compose.ui.unit.dp
 import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.EmailTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.GoogleButton
+import com.infinitelearning.tugasadvance.presentation.screen.auth.component.NameTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.PasswordTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.TextChoice
 import com.infinitelearning.tugasadvance.utils.ImoKeyboard
 
 @Composable
-fun LoginScreen(
-    moveToHome: () -> Unit,
-    moveToRegister: () -> Unit,
+fun RegisterScreen(
+    moveToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    LoginContent(
+    RegisterContent(
+        name = name,
         email = email,
         password = password,
+        onNameChange = { name = it },
         onEmailChange = { email = it },
         onPasswordChange = { password = it },
-        onLoginClick = { moveToHome() },
+        onRegisterClick = { },
         onGoogleClick = { },
-        moveToRegister = moveToRegister
+        moveToLogin = moveToLogin
     )
 }
 
 @Composable
-fun LoginContent(
+fun RegisterContent(
+    name: String,
     email: String,
     password: String,
+    onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onLoginClick: () -> Unit,
+    onRegisterClick: () -> Unit,
     onGoogleClick: () -> Unit,
-    moveToRegister: () -> Unit,
+    moveToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -83,7 +89,8 @@ fun LoginContent(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()
+                )
         ) {
 
             Spacer(modifier = Modifier.height(60.dp))
@@ -91,12 +98,12 @@ fun LoginContent(
             Image(painter = painterResource(id = R.drawable.logo), contentDescription = null)
 
             Text(
-                text = "Sign In",
+                text = "Sign Up",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = "Login Disini",
+                text = "Daftar Disini",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -105,24 +112,33 @@ fun LoginContent(
 
             Spacer(modifier = Modifier.height(50.dp))
 
+            NameTextField(
+                value = name,
+                onValueChange = onNameChange,
+                label = "Enter Your Name",
+                imageVector = Icons.Outlined.AccountCircle,
+                keyboardIme = ImoKeyboard.NEXT,
+                contentDescription = "Name"
+            )
+
             EmailTextField(
                 value = email,
                 onValueChange = onEmailChange,
                 imageVector = Icons.Outlined.Email,
                 contentDescription = "Email",
-                label = "Email",
+                label = "Enter Your email",
                 keyboardIme = ImoKeyboard.NEXT
             )
 
             PasswordTextField(
                 text = password,
                 onValueChange = onPasswordChange,
-                label = "Password",
+                label = "Your Password",
                 keyboardIme = ImoKeyboard.END
             )
 
             Button(
-                onClick = onLoginClick,
+                onClick = onRegisterClick,
                 colors = ButtonDefaults.buttonColors(
                     contentColor = Color.White, containerColor = Color(0xFF1C1B1F)
                 ),
@@ -153,10 +169,10 @@ fun LoginContent(
                 modifier = Modifier.padding(top = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Apakah Kamu belum punya akun?")
-                TextButton(onClick = moveToRegister) {
+                Text(text = "Apakah Kamu Sudah punya akun?")
+                TextButton(onClick = moveToLogin) {
                     Text(
-                        text = "Daftar",
+                        text = "Login",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge
                     )
