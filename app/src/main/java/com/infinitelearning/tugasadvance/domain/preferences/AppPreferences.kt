@@ -5,10 +5,4 @@ import kotlinx.coroutines.flow.Flow
 
 interface AppPreferences {
 
-    val statusOnboarding : Preferences.Key<Boolean>
-
-    fun getStatusOnboardingUser(): Flow<Boolean>
-
-    suspend fun saveStatusOnboardingUser(status: Boolean)
-
 }

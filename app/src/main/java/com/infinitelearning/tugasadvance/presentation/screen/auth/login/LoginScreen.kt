@@ -1,5 +1,9 @@
 package com.infinitelearning.tugasadvance.presentation.screen.auth.login
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -32,10 +36,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,12 +52,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.navigation.Screen
+import com.infinitelearning.tugasadvance.presentation.screen.auth.common.signInIntentSender
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.EmailTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.GoogleButton
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.PasswordTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.TextChoice
 import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 import com.infinitelearning.tugasadvance.utils.ImoKeyboard
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -66,6 +74,23 @@ fun LoginScreen(
 
     val loginLoading = viewModel.loginState.collectAsState().value.isLoading
     val loginSuccess = viewModel.loginState.collectAsState().value.isSuccess
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                scope.launch {
+                    viewModel.loginWithGmail(
+                        result.data ?: return@launch
+                    )
+                }
+            }
+        }
+    )
+
     var isLoadingDialogShow by remember {
         mutableStateOf(false)
     }
@@ -96,7 +121,16 @@ fun LoginScreen(
         onEmailChange = { email = it },
         onPasswordChange = { password = it },
         onLoginClick = { viewModel.login(email, password) },
-        onGoogleClick = { },
+        onGoogleClick = {
+            scope.launch {
+                val signInIntentSender = signInIntentSender(context)
+                launcher.launch(
+                    IntentSenderRequest.Builder(
+                        signInIntentSender ?: return@launch
+                    ).build()
+                )
+            }
+        },
         moveToRegister = moveToRegister
     )
 }
@@ -212,7 +246,7 @@ fun LoadingDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AlertDialog(onDismissRequest = {onDismissRequest()}) {
+    AlertDialog(onDismissRequest = { onDismissRequest() }) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -235,12 +269,12 @@ fun DialogLoginSuccess(
     modifier: Modifier = Modifier
 ) {
     AlertDialog(
-        onDismissRequest = {onDismissRequest()},
+        onDismissRequest = { onDismissRequest() },
         text = {
             Text(
                 text = "Yey, Berhasil Login",
                 style = MaterialTheme.typography.bodyMedium
-                )
+            )
         },
         confirmButton = {
             TextButton(onClick = { moveToHome() }) {
@@ -249,7 +283,7 @@ fun DialogLoginSuccess(
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontSize = 14.sp
                     ),
-                    color = primaryColor
+                    color = Color.White
                 )
             }
         }

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.navigation.Screen
@@ -23,12 +24,15 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: SplashViewModel = hiltViewModel()
 ) {
 
     var logoVisible by remember { mutableStateOf(false) }
     var logoRotated by remember { mutableStateOf(false) }
     var showText by remember { mutableStateOf(false) }
+
+    val statusLogin = viewModel.getStatusLogin().collectAsState(initial = false)
 
     LaunchedEffect(Unit) {
         delay(1000)
@@ -37,11 +41,20 @@ fun SplashScreen(
         logoRotated = true
         logoVisible = true
         delay(1000)
-        navController.navigate(Screen.LoginScreen.route){
-            popUpTo(Screen.SplashScreen.route){
-                inclusive = true
+        if (statusLogin.value){
+            navController.navigate(Screen.HomeScreen.route){
+                popUpTo(Screen.SplashScreen.route){
+                    inclusive = true
+                }
+            }
+        }else {
+            navController.navigate(Screen.LoginScreen.route){
+                popUpTo(Screen.SplashScreen.route){
+                    inclusive = true
+                }
             }
         }
+
     }
 
     Box(

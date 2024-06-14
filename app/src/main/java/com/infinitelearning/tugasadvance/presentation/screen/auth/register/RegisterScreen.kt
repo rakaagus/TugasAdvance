@@ -1,5 +1,9 @@
 package com.infinitelearning.tugasadvance.presentation.screen.auth.register
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -30,10 +34,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +50,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.navigation.Screen
+import com.infinitelearning.tugasadvance.presentation.screen.auth.common.signInIntentSender
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.EmailTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.GoogleButton
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.NameTextField
@@ -51,6 +58,7 @@ import com.infinitelearning.tugasadvance.presentation.screen.auth.component.Pass
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.TextChoice
 import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 import com.infinitelearning.tugasadvance.utils.ImoKeyboard
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
@@ -62,16 +70,32 @@ fun RegisterScreen(
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    
+
     val registerLoading = viewModel.registerState.collectAsState().value.isLoading
     val registerSuccess = viewModel.registerState.collectAsState().value.isSuccess
+
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                scope.launch {
+                    viewModel.registerWithGmail(
+                        result.data ?: return@launch
+                    )
+                }
+            }
+        }
+    )
+
     var isLoadingDialogShow by remember {
         mutableStateOf(false)
     }
     var isSuccessDialogShow by remember {
         mutableStateOf(false)
     }
-    
+
     if (registerLoading) {
         RegisterLoadingDialog(onDismissRequest = { isLoadingDialogShow = false })
     }
@@ -94,7 +118,16 @@ fun RegisterScreen(
         onEmailChange = { email = it },
         onPasswordChange = { password = it },
         onRegisterClick = { viewModel.register(name, email, password) },
-        onGoogleClick = { },
+        onGoogleClick = {
+            scope.launch {
+                val intentSender = signInIntentSender(context)
+                launcher.launch(
+                    IntentSenderRequest.Builder(
+                        intentSender ?: return@launch
+                    ).build()
+                )
+            }
+        },
         moveToLogin = moveToLogin
     )
 }
@@ -121,7 +154,8 @@ fun RegisterContent(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .verticalScroll(rememberScrollState()
+                .verticalScroll(
+                    rememberScrollState()
                 )
         ) {
 
@@ -222,7 +256,7 @@ fun RegisterLoadingDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AlertDialog(onDismissRequest = {onDismissRequest()}) {
+    AlertDialog(onDismissRequest = { onDismissRequest() }) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -245,7 +279,7 @@ fun DialogRegisterSuccess(
     modifier: Modifier = Modifier
 ) {
     AlertDialog(
-        onDismissRequest = {onDismissRequest()},
+        onDismissRequest = { onDismissRequest() },
         text = {
             Text(
                 text = "Yey, Berhasil Login",

@@ -1,5 +1,6 @@
 package com.infinitelearning.tugasadvance.presentation.screen.auth.login
 
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infinitelearning.tugasadvance.data.Result
@@ -14,14 +15,14 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
-) : ViewModel(){
+) : ViewModel() {
 
     private val _loginState = MutableStateFlow(LoginState())
     val loginState = _loginState.asStateFlow()
 
     fun login(email: String, password: String) = viewModelScope.launch {
-        authRepository.login(email, password).collect{ result ->
-            when(result){
+        authRepository.login(email, password).collect { result ->
+            when (result) {
                 is Result.Loading -> {
                     _loginState.update {
                         it.copy(
@@ -29,6 +30,7 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is Result.Success -> {
                     _loginState.update {
                         it.copy(
@@ -37,6 +39,7 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                 }
+
                 is Result.Error -> {
                     _loginState.update {
                         it.copy(
@@ -49,4 +52,36 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun loginWithGmail(intent: Intent) = viewModelScope.launch {
+        authRepository.signInWithIntent(intent).collect { result ->
+            when (result) {
+                is Result.Error -> {
+                    _loginState.update {
+                        it.copy(
+                            isError = result.message,
+                            isConnectLoading = false
+                        )
+                    }
+                }
+
+                is Result.Loading -> {
+                    _loginState.update {
+                        it.copy(
+                            isConnectLoading = true
+                        )
+                    }
+                }
+
+                is Result.Success -> {
+                    _loginState.update {
+                        it.copy(
+                            signInResult = result.data,
+                            isSuccess = true,
+                            isConnectLoading = false
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

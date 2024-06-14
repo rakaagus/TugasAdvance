@@ -1,5 +1,6 @@
 package com.infinitelearning.tugasadvance.presentation.screen.auth.register
 
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.infinitelearning.tugasadvance.data.Result
@@ -43,6 +44,39 @@ class RegisterViewModel @Inject constructor(
                         it.copy(
                             isError = result.message,
                             isConnectLoading = true
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun registerWithGmail(intent: Intent) = viewModelScope.launch {
+        authRepository.signInWithIntent(intent).collect { result ->
+            when (result) {
+                is Result.Error -> {
+                    _registerState.update {
+                        it.copy(
+                            isError = result.message,
+                            isConnectLoading = false
+                        )
+                    }
+                }
+
+                is Result.Loading -> {
+                    _registerState.update {
+                        it.copy(
+                            isConnectLoading = true
+                        )
+                    }
+                }
+
+                is Result.Success -> {
+                    _registerState.update {
+                        it.copy(
+                            signInResult = result.data,
+                            isSuccess = true,
+                            isConnectLoading = false
                         )
                     }
                 }
