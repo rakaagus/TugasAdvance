@@ -1,4 +1,5 @@
 package com.infinitelearning.tugasadvance.presentation.screen.map
 
-class MapViewModel {
+enum class MapViewModel {
+    NORMAL
 }
