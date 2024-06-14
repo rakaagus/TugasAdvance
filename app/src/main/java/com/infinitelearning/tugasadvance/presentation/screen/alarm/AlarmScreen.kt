@@ -19,6 +19,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.AlarmAdd
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -51,6 +52,7 @@ import com.infinitelearning.infiniteapp.presentation.screen.alarm.component.Sche
 import com.infinitelearning.infiniteapp.presentation.screen.alarm.component.ScheduleNameTextField
 import com.infinitelearning.infiniteapp.presentation.screen.alarm.component.ScheduleTimeTextField
 import com.infinitelearning.infiniteapp.presentation.screen.alarm.component.TimePickerDialog
+import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 import com.infinitelearning.tugasadvance.utils.cancelNotification
 import com.infinitelearning.tugasadvance.utils.scheduleNotification
 import java.text.SimpleDateFormat
@@ -225,7 +227,10 @@ fun AlarmScreen(
                                 scheduleTime = ""
                             }
                         },
-                        shape = MaterialTheme.shapes.small
+                        shape = MaterialTheme.shapes.small,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Gray
+                        )
                     ) {
                         Text(
                             text = "Simpan",
