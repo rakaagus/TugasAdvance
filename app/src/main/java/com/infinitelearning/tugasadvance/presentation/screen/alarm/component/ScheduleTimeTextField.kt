@@ -8,9 +8,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -46,6 +48,17 @@ fun ScheduleTimeTextField(
         },
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp)
+            .padding(bottom = 16.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            focusedLabelColor = Color.White,
+            focusedBorderColor = Color.White,
+            focusedPrefixColor = Color.White,
+            focusedSuffixColor = Color.White,
+            focusedSupportingTextColor = Color.White,
+            focusedPlaceholderColor = Color.White,
+            focusedTrailingIconColor = Color.White,
+            focusedLeadingIconColor = Color.White
+        )
     )
 }

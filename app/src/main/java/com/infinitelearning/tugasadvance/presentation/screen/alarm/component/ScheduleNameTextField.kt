@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
@@ -32,6 +34,17 @@ fun ScheduleNameTextField(
         shape = RoundedCornerShape(8.dp),
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp)
+            .padding(bottom = 16.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            focusedLabelColor = Color.White,
+            focusedBorderColor = Color.White,
+            focusedPrefixColor = Color.White,
+            focusedSuffixColor = Color.White,
+            focusedSupportingTextColor = Color.White,
+            focusedPlaceholderColor = Color.White,
+            focusedTrailingIconColor = Color.White,
+            focusedLeadingIconColor = Color.White
+        )
     )
 }
