@@ -2,7 +2,7 @@ package com.infinitelearning.tugasadvance.presentation.screen.auth.register
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,21 +11,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,22 +38,53 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.infinitelearning.tugasadvance.R
+import com.infinitelearning.tugasadvance.presentation.navigation.Screen
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.EmailTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.GoogleButton
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.NameTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.PasswordTextField
 import com.infinitelearning.tugasadvance.presentation.screen.auth.component.TextChoice
+import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 import com.infinitelearning.tugasadvance.utils.ImoKeyboard
 
 @Composable
 fun RegisterScreen(
     moveToLogin: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    viewModel: RegisterViewModel = hiltViewModel()
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    
+    val registerLoading = viewModel.registerState.collectAsState().value.isLoading
+    val registerSuccess = viewModel.registerState.collectAsState().value.isSuccess
+    var isLoadingDialogShow by remember {
+        mutableStateOf(false)
+    }
+    var isSuccessDialogShow by remember {
+        mutableStateOf(false)
+    }
+    
+    if (registerLoading) {
+        RegisterLoadingDialog(onDismissRequest = { isLoadingDialogShow = false })
+    }
+
+    if (registerSuccess) {
+        DialogRegisterSuccess(onDismissRequest = { isSuccessDialogShow = false }, moveToLogin = {
+            navController.navigate(Screen.LoginScreen.route) {
+                popUpTo(Screen.RegisterScreen.route) {
+                    inclusive = true
+                }
+            }
+        })
+    }
 
     RegisterContent(
         name = name,
@@ -61,7 +93,7 @@ fun RegisterScreen(
         onNameChange = { name = it },
         onEmailChange = { email = it },
         onPasswordChange = { password = it },
-        onRegisterClick = { },
+        onRegisterClick = { viewModel.register(name, email, password) },
         onGoogleClick = { },
         moveToLogin = moveToLogin
     )
@@ -150,7 +182,7 @@ fun RegisterContent(
                     .height(48.dp)
             ) {
                 Text(
-                    text = "Login",
+                    text = "Register",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
@@ -182,4 +214,54 @@ fun RegisterContent(
             Spacer(modifier = Modifier.height(128.dp))
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RegisterLoadingDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(onDismissRequest = {onDismissRequest()}) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = modifier
+        ) {
+            CircularProgressIndicator(
+                modifier = modifier,
+                color = primaryColor,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+        }
+    }
+}
+
+
+@Composable
+fun DialogRegisterSuccess(
+    onDismissRequest: () -> Unit,
+    moveToLogin: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        onDismissRequest = {onDismissRequest()},
+        text = {
+            Text(
+                text = "Yey, Berhasil Login",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = { moveToLogin() }) {
+                Text(
+                    text = "Go to Home",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 14.sp
+                    ),
+                    color = primaryColor
+                )
+            }
+        }
+    )
 }
