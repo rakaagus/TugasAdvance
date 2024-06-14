@@ -79,160 +79,141 @@ fun AlarmScreen(
     val timePickerState = rememberTimePickerState()
     var showTimePicker by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Alarm")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Arrow Back Icon"
-                        )
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val selectedDate = Calendar.getInstance().apply {
+                            timeInMillis = datePickerState.selectedDateMillis!!
+                        }
+                        scheduleDate = formatter.format(selectedDate.time)
+                        showDatePicker = false
                     }
+                ) {
+                    Text("OK", color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }
+                ) { Text("Cancel", color = Color.White) }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showTimePicker) {
+        TimePickerDialog(
+            onDismissRequest = { showTimePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        scheduleTime = "${timePickerState.hour}:${timePickerState.minute}"
+                        showTimePicker = false
+                    }
+                ) {
+                    Text("OK", color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showTimePicker = false }
+                ) {
+                    Text("Cancel", color = Color.White)
+                }
+            }
+        ) {
+            TimePicker(state = timePickerState)
+        }
+    }
+    Surface(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Buat Alarm",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Medium,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            ScheduleNameTextField(
+                value = scheduleText,
+                onValueChange = { if (it.length <= 25) scheduleText = it },
+                label = "Nama Kegiatan"
+            )
+            ScheduleDateTextField(
+                value = scheduleDate,
+                onValueChange = { scheduleDate = it },
+                label = "Atur Tanggal",
+                icon = Icons.Default.DateRange,
+                onIconClick = {
+                    showDatePicker = true
                 }
             )
-        }
-    ) { paddingValues ->
-        if (showDatePicker) {
-            DatePickerDialog(
-                onDismissRequest = { showDatePicker = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            val selectedDate = Calendar.getInstance().apply {
-                                timeInMillis = datePickerState.selectedDateMillis!!
-                            }
-                            scheduleDate = formatter.format(selectedDate.time)
-                            showDatePicker = false
-                        }
-                    ) {
-                        Text("OK")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDatePicker = false }
-                    ) { Text("Cancel") }
-                }
+            ScheduleTimeTextField(
+                value = scheduleTime,
+                label = "Atur Jam",
+                icon = Icons.Outlined.AlarmAdd,
+                onValueChange = { scheduleTime = it },
+                onIconClick = { showTimePicker = true })
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
             ) {
-                DatePicker(state = datePickerState)
-            }
-        }
-
-        if (showTimePicker) {
-            TimePickerDialog(
-                onDismissRequest = { showTimePicker = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            scheduleTime = "${timePickerState.hour}:${timePickerState.minute}"
-                            showTimePicker = false
-                        }
-                    ) {
-                        Text("OK")
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = { showTimePicker = false }
-                    ) {
-                        Text("Cancel")
-                    }
-                }
-            ) {
-                TimePicker(state = timePickerState)
-            }
-        }
-        Surface(
-            modifier = modifier
-                .padding(paddingValues)
-                .fillMaxSize()
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .verticalScroll(scrollState),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Buat Alarm",
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Medium,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                ScheduleNameTextField(
-                    value = scheduleText,
-                    onValueChange = { if (it.length <= 25) scheduleText = it },
-                    label = "Nama Kegiatan"
-                )
-                ScheduleDateTextField(
-                    value = scheduleDate,
-                    onValueChange = { scheduleDate = it },
-                    label = "Atur Tanggal",
-                    icon = Icons.Default.DateRange,
-                    onIconClick = {
-                        showDatePicker = true
-                    }
-                )
-                ScheduleTimeTextField(
-                    value = scheduleTime,
-                    label = "Atur Jam",
-                    icon = Icons.Outlined.AlarmAdd,
-                    onValueChange = { scheduleTime = it },
-                    onIconClick = { showTimePicker = true })
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                Button(
+                    onClick = {
+                        cancelNotification(context)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Red.copy(0.8f)
+                    ),
+                    shape = MaterialTheme.shapes.small
                 ) {
-                    Button(
-                        onClick = {
-                            cancelNotification(context)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Red.copy(0.8f)
-                        ),
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(
-                            text = "Batal",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Button(
-                        onClick = {
-                            if (scheduleText.isBlank() || scheduleDate.isBlank() || scheduleTime.isBlank()) {
-                                Toast.makeText(
-                                    context,
-                                    "Semua field wajib diisi!",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            } else {
-                                scheduleNotification(
-                                    context,
-                                    timePickerState,
-                                    datePickerState,
-                                    scheduleText
-                                )
-                                scheduleText = ""
-                                scheduleDate = ""
-                                scheduleTime = ""
-                            }
-                        },
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(
-                            text = "Simpan",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
-                        )
-                    }
+                    Text(
+                        text = "Batal",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(
+                    onClick = {
+                        if (scheduleText.isBlank() || scheduleDate.isBlank() || scheduleTime.isBlank()) {
+                            Toast.makeText(
+                                context,
+                                "Semua field wajib diisi!",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        } else {
+                            scheduleNotification(
+                                context,
+                                timePickerState,
+                                datePickerState,
+                                scheduleText
+                            )
+                            scheduleText = ""
+                            scheduleDate = ""
+                            scheduleTime = ""
+                        }
+                    },
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Text(
+                        text = "Simpan",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
                 }
             }
         }

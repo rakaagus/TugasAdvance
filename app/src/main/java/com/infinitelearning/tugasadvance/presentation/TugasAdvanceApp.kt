@@ -85,7 +85,14 @@ fun TugasAdvanceApp(
                     )
                 }
 
-                Screen.AlarmScreen.route -> {}
+                Screen.AlarmScreen.route -> {
+                    CenterTopAppBar(
+                        title = R.string.title_alarm,
+                        navigationIcon = {
+
+                        }
+                    )
+                }
 
                 Screen.MapScreen.route -> {
                     CenterTopAppBar(
@@ -120,7 +127,7 @@ fun TugasAdvanceApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.SplashScreen.route,
+            startDestination = Screen.AlarmScreen.route,
             modifier = modifier.padding(innerPadding)
         ) {
             composable(Screen.SplashScreen.route) {
@@ -135,8 +142,8 @@ fun TugasAdvanceApp(
             composable(Screen.LoginScreen.route) {
                 LoginScreen(
                     moveToHome = {
-                        navController.navigate(Screen.HomeScreen.route){
-                            popUpTo(Screen.LoginScreen.route){
+                        navController.navigate(Screen.HomeScreen.route) {
+                            popUpTo(Screen.LoginScreen.route) {
                                 inclusive = true
                             }
                         }

@@ -55,6 +55,7 @@ fun TimePickerDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 20.dp),
+                    color = Color.White,
                     text = title,
                     style = MaterialTheme.typography.labelMedium
                 )

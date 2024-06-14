@@ -9,8 +9,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -34,6 +36,17 @@ fun ScheduleTimeTextField(
         keyboardOptions = KeyboardOptions.Default.copy(
             capitalization = KeyboardCapitalization.Sentences,
             imeAction = ImeAction.Done
+        ),
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedLabelColor = Color.White,
+            unfocusedLabelColor = Color.White,
+            cursorColor = Color.White,
+            focusedContainerColor = Color(0xFF1C1B1F),
+            unfocusedContainerColor = Color(0xFF1C1B1F),
+            focusedIndicatorColor = Color.White,
+            unfocusedIndicatorColor = Color.White,
         ),
         shape = RoundedCornerShape(8.dp),
         trailingIcon = {
