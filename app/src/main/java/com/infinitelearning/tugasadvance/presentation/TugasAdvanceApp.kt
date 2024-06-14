@@ -37,6 +37,7 @@ import com.infinitelearning.tugasadvance.presentation.navigation.NavigationItem
 import com.infinitelearning.tugasadvance.presentation.navigation.Screen
 import com.infinitelearning.tugasadvance.presentation.screen.auth.login.LoginScreen
 import com.infinitelearning.tugasadvance.presentation.screen.auth.register.RegisterScreen
+import com.infinitelearning.tugasadvance.presentation.screen.map.MapScreen
 import com.infinitelearning.tugasadvance.presentation.screen.splash.SplashScreen
 import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 
@@ -123,14 +124,17 @@ fun TugasAdvanceApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.SplashScreen.route,
+            //startDestination = Screen.SplashScreen.route,
+            startDestination = Screen.MapScreen.route,
             modifier = modifier.padding(innerPadding)
         ) {
             composable(Screen.SplashScreen.route) {
                 SplashScreen(navController = navController)
             }
             composable(Screen.HomeScreen.route) {}
-            composable(Screen.MapScreen.route) {}
+            composable(Screen.MapScreen.route) {
+                MapScreen(navController = navController, modifier = modifier)
+            }
             composable(Screen.AlarmScreen.route) {}
             composable(Screen.FavScreen.route) {}
             composable(Screen.LoginScreen.route) {
