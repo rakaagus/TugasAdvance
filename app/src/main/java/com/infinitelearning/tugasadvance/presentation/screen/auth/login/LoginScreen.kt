@@ -57,7 +57,7 @@ fun LoginScreen(
         password = password,
         onEmailChange = { email = it },
         onPasswordChange = { password = it },
-        onLoginClick = { },
+        onLoginClick = { moveToHome() },
         onGoogleClick = { },
         moveToRegister = moveToRegister
     )
