@@ -8,8 +8,6 @@ import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Map
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,8 +33,12 @@ import androidx.navigation.compose.rememberNavController
 import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.presentation.navigation.NavigationItem
 import com.infinitelearning.tugasadvance.presentation.navigation.Screen
+import com.infinitelearning.tugasadvance.presentation.screen.fav.FavScreen
+import com.infinitelearning.tugasadvance.presentation.screen.home.HomeScreen
+import com.infinitelearning.tugasadvance.presentation.screen.alarm.AlarmScreen
 import com.infinitelearning.tugasadvance.presentation.screen.auth.login.LoginScreen
 import com.infinitelearning.tugasadvance.presentation.screen.auth.register.RegisterScreen
+import com.infinitelearning.tugasadvance.presentation.screen.map.MapScreen
 import com.infinitelearning.tugasadvance.presentation.screen.splash.SplashScreen
 import com.infinitelearning.tugasadvance.ui.theme.primaryColor
 
@@ -59,25 +61,6 @@ fun TugasAdvanceApp(
         },
         topBar = {
             when (currentRoute) {
-                Screen.HomeScreen.route -> {
-                    CenterTopAppBar(
-                        title = R.string.title_home,
-                        actionIcon = {
-                            IconButton(onClick = {
-                                navController.navigate(Screen.MapScreen.route)
-                            }) {
-                                Icon(imageVector = Icons.Filled.Map, contentDescription = "Map")
-                            }
-                            IconButton(onClick = { }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Logout,
-                                    contentDescription = "Logout"
-                                )
-                            }
-                        },
-                    )
-                }
-
                 Screen.FavScreen.route -> {
                     CenterTopAppBar(
                         title = R.string.title_fav
@@ -86,7 +69,10 @@ fun TugasAdvanceApp(
 
                 Screen.AlarmScreen.route -> {
                     CenterTopAppBar(
-                        title = R.string.title_alarm
+                        title = R.string.title_alarm,
+                        navigationIcon = {
+
+                        }
                     )
                 }
 
@@ -123,21 +109,41 @@ fun TugasAdvanceApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.SplashScreen.route,
+            startDestination = Screen.HomeScreen.route,
             modifier = modifier.padding(innerPadding)
         ) {
             composable(Screen.SplashScreen.route) {
                 SplashScreen(navController = navController)
             }
-            composable(Screen.HomeScreen.route) {}
-            composable(Screen.MapScreen.route) {}
-            composable(Screen.AlarmScreen.route) {}
-            composable(Screen.FavScreen.route) {}
+            composable(Screen.HomeScreen.route) {
+                HomeScreen(
+                    moveToLogin = {
+                        navController.navigate(Screen.LoginScreen.route){
+                            popUpTo(Screen.HomeScreen.route){
+                                inclusive = true
+                            }
+                        }
+                    },
+                    moveToMap = {
+                        navController.navigate(Screen.MapScreen.route)
+                    }
+                )
+            }
+            composable(Screen.MapScreen.route) {
+                MapScreen(navController = navController)
+            }
+
+            composable(Screen.AlarmScreen.route) {
+                AlarmScreen(navController)
+            }
+            composable(Screen.FavScreen.route) {
+                FavScreen()
+            }
             composable(Screen.LoginScreen.route) {
                 LoginScreen(
                     moveToHome = {
-                        navController.navigate(Screen.HomeScreen.route){
-                            popUpTo(Screen.LoginScreen.route){
+                        navController.navigate(Screen.HomeScreen.route) {
+                            popUpTo(Screen.LoginScreen.route) {
                                 inclusive = true
                             }
                         }

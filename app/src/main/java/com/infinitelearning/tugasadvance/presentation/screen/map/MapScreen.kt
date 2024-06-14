@@ -42,6 +42,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -51,12 +52,11 @@ import com.infinitelearning.tugasadvance.R
 @Composable
 fun MapScreen (
     navController: NavController,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     MapsContent(navController = navController, modifier = modifier)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsContent(
     navController: NavController,
@@ -74,46 +74,6 @@ fun MapsContent(
     var selectedMapTypeOption by remember { mutableStateOf(MapViewModel.NORMAL) }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Maps") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "icon back"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { expanded = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = "Options"
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                    ) {
-                        MapViewModel.entries.forEach { option ->
-                            DropdownMenuItem(
-                                onClick = {
-                                    selectedMapTypeOption = option
-                                    expanded = false
-                                    properties = when (selectedMapTypeOption) {
-                                        MapViewModel.NORMAL -> MapProperties(mapType = MapType.NORMAL)
-                                    }
-                                },
-                                text = {
-                                    Text(text = option.name)
-                                }
-                            )
-                        }
-                    }
-                }
-            )
-        },
         modifier = modifier
     ) { paddingValues ->
         Box(
@@ -122,70 +82,22 @@ fun MapsContent(
             val context = LocalContext.current
             val tugasAdvanceApp = LatLng(-7.783214752320985, 110.38682963669578)
             val cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(tugasAdvanceApp, 20f)
+                position = CameraPosition.fromLatLngZoom(tugasAdvanceApp, 12f)
             }
             var properties by remember { mutableStateOf(MapProperties(mapType = MapType.NORMAL)) }
             var uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = true)) }
-            //val iconBitmap = getResizedBitmap(context, R.drawable.logo, 32, 32)
 
             GoogleMap(
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
                 properties = properties,
                 uiSettings = uiSettings
-            )
-            val requestPermissionLauncher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.RequestPermission()
-            ) { isGranted: Boolean ->
-                if (isGranted) {
-                    properties = properties.copy(isMyLocationEnabled = true)
-                }
+            ){
+                Marker(
+                    state = MarkerState(tugasAdvanceApp),
+                    title = "Biskop Di Jogja"
+                )
             }
-
-            fun checkLocationPermission() {
-                if (ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    properties = properties.copy(isMyLocationEnabled = true)
-                } else {
-                    requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-                }
-            }
-
-            LaunchedEffect(Unit) {
-                checkLocationPermission()
-            }
-
-            /*GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-                properties = properties,
-                uiSettings = uiSettings
-            ) {
-                MarkerInfoWindow(
-                    state = MarkerState(tugasAdvanceApp)
-                    //icon = BitmapDescroptorFactory.forBitmap(iconBitmap)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(24.dp))
-                            .background(Color.LightGray)
-                            .padding(24.dp)
-                    ) {
-                        Text("Nontonaja", fontWeight = FontWeight.Bold, color = Color.White)
-                        Text(
-                            "Nonton Bebas di Mana dan Kapan Saja",
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White
-                        )
-                    }
-                }
-            }*/
-
         }
     }
 }

@@ -14,8 +14,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,25 +34,50 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.infinitelearning.tugasadvance.R
 import com.infinitelearning.tugasadvance.domain.model.FavData
 import com.infinitelearning.tugasadvance.domain.model.Movie
+import com.infinitelearning.tugasadvance.presentation.CenterTopAppBar
+import com.infinitelearning.tugasadvance.presentation.navigation.Screen
 import com.infinitelearning.tugasadvance.presentation.screen.fav.FavViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    moveToLogin: () -> Unit,
+    moveToMap: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
 
     val movies by viewModel.movies.collectAsState()
 
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        items(movies) { movie ->
-            MovieItem(movie = movie,
+    Scaffold(
+        topBar = {
+            CenterTopAppBar(
+                title = R.string.title_home,
+                actionIcon = {
+                    IconButton(onClick = moveToMap) {
+                        Icon(imageVector = Icons.Filled.Map, contentDescription = "Map")
+                    }
+                    IconButton(onClick = { }) {
+                        Icon(
+                            imageVector = Icons.Filled.Logout,
+                            contentDescription = "Logout"
+                        )
+                    }
+                },
             )
+        }
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = it
+        ) {
+            items(movies) { movie ->
+                MovieItem(movie = movie,
+                )
+            }
         }
     }
 }
@@ -94,9 +123,9 @@ fun MovieItem(
                         isFavorite.value = !isFavorite.value
                         //add and delete fav
                         val fav = FavData(movie.id, movie.title, movie.posterPath)
-                        if (isFavorite.value){
+                        if (isFavorite.value) {
                             viewModel.addFav(fav)
-                        } else{
+                        } else {
                             viewModel.deleteFav(fav)
                         }
                     }
