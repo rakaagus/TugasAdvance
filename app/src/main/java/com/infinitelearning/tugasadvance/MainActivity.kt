@@ -18,7 +18,9 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.infinitelearning.tugasadvance.presentation.TugasAdvanceApp
 import com.infinitelearning.tugasadvance.ui.theme.TugasAdvanceTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @OptIn(ExperimentalPermissionsApi::class)
